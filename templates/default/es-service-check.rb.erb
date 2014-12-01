@@ -1,0 +1,32 @@
+#!/opt/chef/embedded/bin/ruby
+
+CLUSTER = "<%= @cluster_name %>"
+
+# this should either give us nothing or a JSON document
+response = `curl -f http://127.0.0.1:9200/`
+
+if !response
+  puts "No response from Elasticsearch"
+  exit 2
+end
+
+begin
+  doc = JSON.parse(response,symbolize_keys:true)
+rescue
+  puts "Response was not valid JSON"
+  exit 2
+end
+
+if doc[:status] != 200
+  puts "Elasticsearch reports status #{ doc[:status] }, not 200."
+  exit 2
+end
+
+if doc[:cluster_name] != CLUSTER
+  puts "Elasticsearch reports wrong cluster name. Got #{doc[:cluster_name]}. Expected #{ CLUSTER }."
+  exit 1
+end
+
+puts response
+exit 0
+
