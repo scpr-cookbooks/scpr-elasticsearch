@@ -1,5 +1,7 @@
 #!/opt/chef/embedded/bin/ruby
 
+require "json"
+
 CLUSTER = "<%= @cluster_name %>"
 
 # this should either give us nothing or a JSON document
@@ -11,7 +13,7 @@ if !response
 end
 
 begin
-  doc = JSON.parse(response,symbolize_keys:true)
+  doc = JSON.parse(response,symbolize_names:true)
 rescue
   puts "Response was not valid JSON"
   exit 2
