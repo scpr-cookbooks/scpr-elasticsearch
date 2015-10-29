@@ -14,3 +14,5 @@ suites:
       - recipe[apt]
       - recipe[scpr-elasticsearch::default]
     attributes:
+      consul:
+        service_mode: bootstrap
